@@ -1,0 +1,168 @@
+version: "3.8"
+
+services:  
+    data:
+        container_name: sqlserver
+        image: mcr.microsoft.com/mssql/server:2019-latest
+        ports:
+            - "1433:1433"
+        environment:
+            - ACCEPT_EULA=Y
+            - SA_PASSWORD=myDbConn3ct10nPassw0rD!@
+        volumes:
+            - sqldata:/var/opt/mssql
+        networks:
+            - tasktronic-network
+
+    messages:
+        container_name: rabbitmq
+        image: rabbitmq:3-management
+        ports:
+            - "15672:15672"
+            - "5672:5672"
+        hostname: "rabbitmq"
+        environment:
+            - RABBITMQ_ERLANG_COOKIE=Rand0mR4bbitMqCo0k1e789654
+            - RABBITMQ_DEFAULT_USER=rabbitmq
+            - RABBITMQ_DEFAULT_PASS=rabbitmq
+        networks: 
+            - tasktronic-network
+
+    identity:
+        container_name: identity
+        build:
+            context: ./TaskTronicApp
+            dockerfile: ./TaskTronic.Identity/Dockerfile
+        ports: 
+            - "5000:80"
+        env_file: TaskTronicApp/TaskTronic/Common.env
+        environment:
+            - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=TaskTronicIdentity;User Id=sa; Password=myDbConn3ct10nPassw0rD!@;MultipleActiveResultSets=true
+        restart: on-failure
+        volumes:
+            - ./.aspnet/identity/DataProtection-Keys:/root/.aspnet/DataProtection-Keys
+        networks: 
+            - tasktronic-network
+        depends_on:
+            - data
+            
+    drive:
+        container_name: drive
+        build:
+            context: ./TaskTronicApp
+            dockerfile: ./TaskTronic.Drive/Dockerfile
+        ports: 
+            - "5002:80"
+        env_file: TaskTronicApp/TaskTronic/Common.env
+        environment:
+            - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=TaskTronicDrive;User Id=sa; Password=myDbConn3ct10nPassw0rD!@;MultipleActiveResultSets=true
+        restart: on-failure
+        volumes:
+            - ./.aspnet/drive/DataProtection-Keys:/root/.aspnet/DataProtection-Keys
+        networks: 
+            - tasktronic-network
+        depends_on:
+            - data
+
+    notifications:
+        container_name: notifications
+        build:
+            context: ./TaskTronicApp
+            dockerfile: ./TaskTronic.Notifications/Dockerfile
+        ports: 
+            - "5008:80"
+        env_file: TaskTronicApp/TaskTronic/Common.env
+        restart: on-failure
+        volumes:
+            - ./.aspnet/notifications/DataProtection-Keys:/root/.aspnet/DataProtection-Keys
+        networks: 
+            - tasktronic-network
+        depends_on:
+            - drive
+            
+    statistics:
+        container_name: statistics
+        build:
+            context: ./TaskTronicApp
+            dockerfile: ./TaskTronic.Statistics/Dockerfile
+        ports: 
+            - "5004:80"
+        env_file: TaskTronicApp/TaskTronic/Common.env
+        environment:
+            - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=TaskTronicStatistics;User Id=sa; Password=myDbConn3ct10nPassw0rD!@;MultipleActiveResultSets=true
+        restart: on-failure
+        volumes:
+            - ./.aspnet/statistics/DataProtection-Keys:/root/.aspnet/DataProtection-Keys
+        networks: 
+            - tasktronic-network
+        depends_on:
+            - data
+            
+    admin:
+        container_name: admin
+        build:
+            context: ./TaskTronicApp
+            dockerfile: ./TaskTronic.Admin/Dockerfile
+        ports: 
+            - "5010:80"
+        env_file: TaskTronicApp/TaskTronic/Common.env
+        restart: on-failure
+        volumes:
+            - ./.aspnet/admin/DataProtection-Keys:/root/.aspnet/DataProtection-Keys
+        networks: 
+            - tasktronic-network
+        depends_on:
+            - identity
+            - drive
+            
+    drive.gateway:
+        container_name: drive.gateway
+        build:
+            context: ./TaskTronicApp
+            dockerfile: ./TaskTronic.Drive.Gateway/Dockerfile
+        ports: 
+            - "5006:80"
+        env_file: TaskTronicApp/TaskTronic/Common.env
+        restart: on-failure
+        volumes:
+            - ./.aspnet/drive.gateway/DataProtection-Keys:/root/.aspnet/DataProtection-Keys
+        networks: 
+            - tasktronic-network
+        depends_on:
+            - statistics
+            - drive
+
+    watchdog:
+        container_name: watchdog
+        build:
+            context: ./TaskTronicApp
+            dockerfile: ./TaskTronic.Watchdog/Dockerfile
+        ports: 
+            - "5013:80"
+        restart: on-failure
+        volumes:
+            - ./.aspnet/watchdog/DataProtection-Keys:/root/.aspnet/DataProtection-Keys
+        networks: 
+            - tasktronic-network
+        depends_on:
+            - statistics
+            - drive
+            - identity
+
+    angular:
+        container_name: angular-client
+        build:
+             context: ./TaskTronic.Client
+             dockerfile: ./Dockerfile
+        ports:
+            - "4200:4200"
+        restart: on-failure
+        networks:
+            - tasktronic-network
+        depends_on:
+            - identity
+networks:
+    tasktronic-network:
+
+volumes:
+    sqldata:

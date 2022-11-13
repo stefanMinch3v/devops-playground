@@ -1,0 +1,77 @@
+.content-group {
+    margin-bottom: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.top-bar {
+    background-color: #EFEFEF;
+}
+
+.file-name,
+.folder-name {
+    cursor: pointer;
+}
+
+.file-name:hover,
+.folder-name:hover {
+    text-decoration: underline;
+}
+  
+.folder-row, .file-row {
+    &:not(:hover) {
+        lm-context-menu-button {
+        visibility: hidden;
+        }
+    }
+}
+  
+.fal {
+    padding-left: 0.2em;
+    font-size: 1.35em !important;
+}
+  
+.fas {
+    padding-right: 0.5em;
+    font-size: 1.5em !important;
+}
+  
+.center-content-vertically {
+    display: flex;
+    align-items: center;
+}
+  
+.seachFilesContainer{
+    width: 500px;
+    float: right;
+    padding: 5px;
+}
+
+.seachFilesContainer input{
+    width: 75%;
+    float: left;
+}
+
+.seachFilesContainer button{
+    width: 20%;
+    float: right;
+}
+
+.over-cursor {
+    cursor: pointer;
+}
+
+.top-bar-custom-padding {
+    padding-bottom: 2.3em !important;
+}
+
+.my-spinner {
+    margin-left: 45%;
+    position: absolute;
+    top: 22%;
+}
+
+#pick-files,
+#upload-files {
+    color: white !important;
+}

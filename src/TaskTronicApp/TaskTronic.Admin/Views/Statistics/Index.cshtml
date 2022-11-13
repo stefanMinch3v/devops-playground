@@ -1,0 +1,9 @@
+﻿@model TaskTronic.Admin.Models.Statistics.OutputStatisticsServiceModel
+@{
+    ViewData["Title"] = "Drive Statistics";
+}
+
+<div class="jumbotron mt-5">
+    <h1 class="display-4 text-center col-md-12">Created folders: @Model.TotalFolders</h1>
+    <h1 class="display-4 text-center col-md-12">Uploaded files: @Model.TotalFiles</h1>
+</div>

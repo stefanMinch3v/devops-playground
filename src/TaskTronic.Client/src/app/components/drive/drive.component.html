@@ -1,0 +1,200 @@
+<div class="content-group">
+    <!-- TOPBAR -->
+    <div class="top-bar" [ngClass]="{'top-bar-custom-padding': hasSearchResult}">
+      <div>
+        <button class="btn-sm btn-info over-cursor" (click)="openModal('', true, 0, 0, true)">
+          <i class="fa fa-plus"></i> New Folder
+        </button>
+        <button class="btn-sm btn-success over-cursor" (click)="openModal('', false, 0, 0, true)">
+          <i class="fa fa-plus"></i> New Word file
+        </button>
+        <button class="btn-sm btn-success over-cursor" (click)="openModal('', false, 0, 0, true, false)">
+          <i class="fa fa-plus"></i> New Excel file
+        </button>
+
+        <p class="col-md-1"></p>
+
+        <div id="pluploadcontainer">
+          <a id="pick-files" class="btn btn-sm btn-warning">
+            <i class="far fa-object-group"></i> Select files
+          </a>
+          |
+          <a id="upload-files" class="btn btn-sm btn-warning" (click)="startUpload()">
+            <i class="fa fa-upload"></i> Upload files
+          </a>
+        </div>
+        <div id="file-list"></div>
+      </div>
+  
+      <div class="seachFilesContainer">
+        <form> 
+          <input type="text" placeholder="Search files.. " #searchValue (keyup)="updateSearch()">
+          <button (click)="searchForFiles($event)">Search</button>
+        </form>
+      </div>
+  
+      <!--Breadcrumbs-->
+      <drive-breadcrumbs *ngIf="!hasSearchResult"
+        [parentFolderChain]="parentFolderChain"
+        (rootFolderClicked)="navigateToRoot()"
+        (otherFolderClicked)="openFolder($event.id)"
+      ></drive-breadcrumbs>
+    </div>
+
+    <!--Spinner-->
+    <div *ngIf="isLoading" class="my-spinner">
+      <i class="fas fa-sync fa-spin"></i>
+    </div>
+    
+    <table *ngIf="hasSearchResult && searchResults.length > 0" class="table table-borderless">
+      <thead>
+        <tr>
+          <th scope="col"></th>
+          <th scope="col">Name</th>
+          <th scope="col"></th>
+          <th scope="col">Date</th>
+          <th scope="col">Type</th>
+          <th scope="col">Size</th>
+          <th scope="col">Created By</th>
+        </tr>
+      </thead>
+      <tbody *ngFor="let file of searchResults">
+        <tr class="file-row">
+          <td></td>
+          <td>
+            <i 
+              [ngClass]="getFontAwesomeIconName(file.fileType)" 
+              [ngStyle]="{color: file.fileType | faIconColor}"></i>
+            <span 
+                class="file-name" 
+                title="{{file.fileName}}"
+                (click)="downloadFile(file, true)">
+              {{file.fileName | appendFolderPath:file.searchFolderNamesPath }}
+            </span>
+          </td>
+          <td>
+            <button class="btn btn-sm btn-danger" (click)="deleteFile(file)">Delete</button>
+            |
+            <button class="btn btn-sm btn-warning" (click)="openModal(file.fileName, false, file.folderId, file.fileId, false)">Edit</button>
+            |
+            <button class="btn btn-sm btn-success" (click)="downloadFile(file)">Download</button>
+          </td>
+          <td>{{file.createDate | date : 'dd-MM-yyyy HH:mm:ss'}}</td>
+          <td>{{file.fileType}}</td>
+          <td>{{file.fileSize | displayFileSize}}</td>
+          <td>{{file.creatorUsername}}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table *ngIf="hasSearchResult && searchResults.length === 0" class="table table-borderless">
+      <thead>
+        <tr>
+          <th scope="col"></th>
+          <th scope="col">Name</th>
+          <th scope="col"></th>
+          <th scope="col">Date</th>
+          <th scope="col">Type</th>
+          <th scope="col">Size</th>
+          <th scope="col">Created By</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="file-row">
+          <td></td>
+          <td>0 results found.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table *ngIf="!hasSearchResult" class="table table-hover table-borderless" >
+      <thead>
+        <tr>
+          <th scope="col"></th>
+          <th scope="col">Name</th>
+          <th scope="col"></th>
+          <th scope="col">Date</th>
+          <th scope="col">Type</th>
+          <th scope="col">Size</th>
+          <th scope="col">Created By</th>
+        </tr>
+      </thead>
+      <tbody *ngIf="folder && folder.subFolders">
+        <tr *ngFor="let folder of folder.subFolders" class="folder-row">
+          <td></td>
+          <td>
+            <i class="fas fa-folder" [ngStyle]="{'color': folder.isPrivate ? '#F7774' : '#F7D774'}"></i>
+            <span title="{{folder.name}}" class="folder-name" (click)="openFolder(folder.folderId)">{{folder.name}}</span>
+          </td>
+          <td>
+            <button (click)="deleteFolder(folder)" class="btn btn-sm btn-danger">
+              Delete
+            </button>
+            |
+            <button  class="btn btn-sm btn-warning" (click)="openModal(folder.name, true, folder.folderId, folder.folderId, false)">
+              Edit
+            </button>
+            <span *ngIf="isCurrentUserAuthor(folder.creatorUsername)"> | </span>
+            <button *ngIf="isCurrentUserAuthor(folder.creatorUsername)" (click)="togglePrivate(folder.folderId, folder.catalogId)" class="btn btn-sm btn-primary">
+              <span *ngIf="folder.isPrivate">Make public</span>
+              <span *ngIf="!folder.isPrivate">Make private</span>
+            </button>
+          </td>
+          <td>{{folder.createDate | date : 'dd-MM-yyyy HH:mm:ss'}}</td>
+          <td>Folder</td>
+          <td>
+            <span>{{folder.folderCount}} {{folder.folderCount === 1 ? 'folder' : 'folders'}},</span>
+            <span>{{folder.fileCount}} {{folder.fileCount === 1 ? 'file' : 'files'}}</span>
+          </td>
+          <td>{{folder.creatorUsername}}</td>
+        </tr>
+        <tr *ngFor="let file of folder.files" class="file-row">
+          <td></td>
+          <td>
+            <i 
+              [ngClass]="getFontAwesomeIconName(file.fileType)"
+              [ngStyle]="{color: file.fileType | faIconColor}">
+            </i>
+            <span 
+                class="file-name" 
+                title="{{file.fileName}}"
+                (click)="downloadFile(file, true)">
+              {{file.fileName | overflowEllipsis}}
+            </span>
+          </td>
+          <td>
+            <button class="btn btn-sm btn-danger" (click)="deleteFile(file)">Delete</button>
+            |
+            <button class="btn btn-sm btn-warning" (click)="openModal(file.fileName, false, file.folderId, file.fileId, false)">Edit</button>
+            |
+            <button class="btn btn-sm btn-success" (click)="downloadFile(file)">Download</button>
+          </td>
+          <td>{{file.createDate | date : 'dd-MM-yyyy HH:mm:ss'}}</td>
+          <td>{{file.fileType}}</td>
+          <td>{{file.fileSize | displayFileSize}}</td>
+          <td>{{file.creatorUsername}}</td>
+        </tr>
+      </tbody>
+    </table>
+</div>
+
+<!--Bootstrap modal-->
+<ng-template #modalTemplate>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">{{modalIsCreate ? 'Create' : 'Edit'}} modal</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <input type="text" [value]="modalNameToChange" (input)="modalNameToChange = $event.target.value">
+  </div>
+
+  <div class="modal-footer">
+    <button *ngIf="modalIsFolder && !modalIsCreate" type="button" class="btn btn-outline-dark" (click)="renameFolder()">Edit</button>
+    <button *ngIf="modalIsFolder && modalIsCreate" type="button" class="btn btn-outline-dark" (click)="createFolder()">Create</button>
+    <button *ngIf="!modalIsFolder && !modalIsCreate" type="button" class="btn btn-outline-dark" (click)="renameFile()">Edit</button>
+    <button *ngIf="!modalIsFolder && modalIsCreate" type="button" class="btn btn-outline-dark" (click)="createNewDocumentFile()">Create</button>
+  </div>
+</ng-template>

@@ -1,0 +1,14 @@
+﻿@model CreateFormViewModel
+
+<h2>Company</h2>
+<form asp-controller="Companies" asp-action="Create" method="post">
+    <div class="row">
+        <div class="col-md-12">
+            @await Html.PartialAsync("_CreateForm", Model)
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}
