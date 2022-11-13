@@ -38,8 +38,11 @@ jobs:
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
       - name: Install dependencies
-        run: dotnet restore
+        working-directory: src/TaskTronicApp/TaskTronic.Tests
+        run: dotnet restore 
       - name: Build
+        working-directory: src/TaskTronicApp/TaskTronic.Tests
         run: dotnet build --configuration Release --no-restore
       - name: Test
-        run: dotnet test src\TaskTronicApp\TaskTronic.Tests --no-restore --verbosity normal 
+        working-directory: src/TaskTronicApp/TaskTronic.Tests
+        run: dotnet test --no-restore --verbosity normal 
