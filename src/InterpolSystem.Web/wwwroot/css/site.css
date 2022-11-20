@@ -1,0 +1,199 @@
+﻿@import url('https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700');
+@import url('//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css');
+body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Wrapping element */
+/* Set some basic padding to keep content from hitting the edges */
+.body-content {
+    margin-top: 1em;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Carousel */
+.carousel-caption p {
+    font-size: 20px;
+    line-height: 1.4;
+}
+
+/* Make .svg files in the carousel display properly in older browsers */
+.carousel-inner .item img[src$=".svg"] {
+    width: 100%;
+}
+
+/* QR code generator */
+#qrCode {
+    margin: 15px;
+}
+
+#bootstrap-override #main-nav-bar ul, #bootstrap-override .navbar-collapse {
+    background-color: black;
+}
+#bootstrap-override .navbar-inverse {
+    background-color: black;
+    background-image:none;
+}
+#bootstrap-override{
+    font-family: 'Roboto', sans-serif;
+
+}
+#bootstrap-override .navbar a {
+    color: white;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.2em;
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased !important;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    }
+
+#bootstrap-override .main-logo{
+    background-color:white;
+    height:50px;
+    padding:2px;
+    
+}
+
+.navbar-fixed-top {
+    top: 0;
+    border-width: 0 0 0px;
+}
+#bootstrap-override .main-logo:hover{
+    background-color:dodgerblue;
+}
+
+#bootstrap-override a:hover{
+    background-color:dodgerblue;
+    
+}
+
+.main-logo {
+    height: 3em;
+}
+
+.missing-people-listings .img-responsive, .wanted-people-listings .img-responsive {
+    height: 200px !important;
+    width: 200px !important;
+}
+
+.text-custom {
+    font-weight: bold;
+}
+
+.disabled {
+    pointer-events: none;
+}
+
+.admin-usersmenu-buttons {
+    margin-top: 1.5em;
+}
+
+.custom-buttons {
+    width: 10em;
+}
+
+.search-button {
+    margin-top: 3.5em;
+    width: 120px;
+}
+
+.form-search-margin {
+    margin-top: 2px;
+}
+
+.custom-hr {
+    background-color: #337ab7;
+    height: 1.5px;
+}
+
+#fixedHeight {
+    height: 15em;
+}
+
+.zoom {
+    padding: 1px;
+    background-color: green;
+    transition: transform .1s;
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+}
+
+.zoom:hover {
+    transform: scale(2.3); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+    cursor: zoom-in;
+}
+
+#main-headings h2, 
+#main-headings h3, 
+#main-headings h4,
+#main-headings h5, 
+#main-headings h6 {
+    text-align: center;
+    text-transform: uppercase;
+    color: cornflowerblue;
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased !important;
+}
+
+#main-headings p{
+    text-align:center;
+    font-size: 1.5em;
+}
+
+#background {
+    background-image: url("../images/background-logo.jpg");
+    background-attachment: fixed;
+    opacity: 0.3;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    z-index: -1; /* To make sur it's below the rest */
+    height: 170%;
+    background-size: cover;
+    -webkit-transform: translateZ(0);
+}
+
+iframe {
+    display: block;
+    margin: 0 auto;
+}
+
+.emergincrime-polish{
+    margin-bottom:4px;
+}
+
+.item {
+    max-height:550px ;
+    overflow: hidden;
+}
+
+.item p {
+    background-color: black;
+}
+
+.img-carousel {
+    width: 1200px;
+}
+
+.reward-strike {
+    text-decoration: line-through;
+}
+@media screen and (max-width: 1199px) and (min-width:991px) {
+    .body-content{
+        padding-top:50px;
+    }
+    }
+@media screen and (max-width: 990px) and (min-width:768px) {
+    .body-content {
+        padding-top: 150px;
+    }
+    .article-menu{
+        display:none;
+    }
+}
