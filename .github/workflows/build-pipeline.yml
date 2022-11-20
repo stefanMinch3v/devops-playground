@@ -79,6 +79,16 @@ jobs:
           images: ${{ secrets.DOCKER_NAMESPACE }}/${{ secrets.DOCKER_REPOSITORY }}
           tags: |
             type=sha,format=long
+      - name: Setup .NET SDK 6.0
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 6.0
+      - name: Install dependencies
+        working-directory: ./src
+        run: dotnet restore 
+      - name: Build
+        working-directory: ./src
+        run: dotnet build --configuration Release --no-restore
       - name: Build and push Docker image
         uses: docker/build-push-action@v3
         with:
