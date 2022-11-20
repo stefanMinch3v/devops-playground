@@ -80,7 +80,7 @@ jobs:
           tags: |
             type=sha,format=long
       - name: Build and push Docker image
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           context: ./src/InterpolSystem.Web
           file: ./src/InterpolSystem.Web/Dockerfile
