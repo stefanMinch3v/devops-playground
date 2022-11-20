@@ -12,155 +12,155 @@
 
     public class WantedPeopleServiceTest
     {
-        public WantedPeopleServiceTest()
-        {
-            Tests.InitializeAutoMapper();
-        }
+        //public WantedPeopleServiceTest()
+        //{
+        //    Tests.InitializeAutoMapper();
+        //}
 
-        [Fact]
-        public void ShouldReturnCorrectResultWithCorrectModel()
-        {
-            // Arrange
-            var db = Tests.GetDatabase();
+        //[Fact]
+        //public void ShouldReturnCorrectResultWithCorrectModel()
+        //{
+        //    // Arrange
+        //    var db = Tests.GetDatabase();
 
-            var wantedPeopleData = this.GetWantedPeopleData();
+        //    var wantedPeopleData = this.GetWantedPeopleData();
 
-            db.AddRange(wantedPeopleData);
+        //    db.AddRange(wantedPeopleData);
 
-            db.SaveChanges();
+        //    db.SaveChanges();
 
-            var wantedPeopleService = new WantedPeopleService(db);
+        //    var wantedPeopleService = new WantedPeopleService(db);
 
-            // Act
-            var result = wantedPeopleService.All().OrderBy(r => r.Id);
+        //    // Act
+        //    var result = wantedPeopleService.All().OrderBy(r => r.Id);
 
-            // Assert
-            result
-                .Should().AllBeOfType<WantedPeopleListingServiceModel>()
-                .And.HaveCount(2);
+        //    // Assert
+        //    result
+        //        .Should().AllBeOfType<WantedPeopleListingServiceModel>()
+        //        .And.HaveCount(2);
 
-            result
-                .Should().Match(r =>
-                    r.ElementAt(0).Id == 1
-                    && r.ElementAt(1).Id == 2);
-        }
+        //    result
+        //        .Should().Match(r =>
+        //            r.ElementAt(0).Id == 1
+        //            && r.ElementAt(1).Id == 2);
+        //}
 
-        [Fact]
-        public void ShouldReturnCorrectPersonDetails()
-        {
-            // Arrange
-            var db = Tests.GetDatabase();
+        //[Fact]
+        //public void ShouldReturnCorrectPersonDetails()
+        //{
+        //    // Arrange
+        //    var db = Tests.GetDatabase();
 
-            var wantedPeopleData = this.GetWantedPeopleData();
+        //    var wantedPeopleData = this.GetWantedPeopleData();
 
-            db.AddRange(wantedPeopleData);
+        //    db.AddRange(wantedPeopleData);
 
-            db.SaveChanges();
+        //    db.SaveChanges();
 
-            var wantedPeopleService = new WantedPeopleService(db);
+        //    var wantedPeopleService = new WantedPeopleService(db);
 
-            // Act
-            var resultPesho = wantedPeopleService.GetPerson(1);
-            var resultIvan = wantedPeopleService.GetPerson(2);
+        //    // Act
+        //    var resultPesho = wantedPeopleService.GetPerson(1);
+        //    var resultIvan = wantedPeopleService.GetPerson(2);
 
-            // Assert
-            resultPesho.FirstName
-                .Should().Match(r => r.Equals("Pesho"));
+        //    // Assert
+        //    resultPesho.FirstName
+        //        .Should().Match(r => r.Equals("Pesho"));
 
-            resultIvan.FirstName
-                .Should().Match(r => r.Equals("Ivan"));
-        }
+        //    resultIvan.FirstName
+        //        .Should().Match(r => r.Equals("Ivan"));
+        //}
 
-        [Fact]
-        public void ShouldReturnTrueIfPersonExists()
-        {
-            // Arrange
-            var db = Tests.GetDatabase();
+        //[Fact]
+        //public void ShouldReturnTrueIfPersonExists()
+        //{
+        //    // Arrange
+        //    var db = Tests.GetDatabase();
 
-            var wantedPeopleData = this.GetWantedPeopleData();
+        //    var wantedPeopleData = this.GetWantedPeopleData();
 
-            db.AddRange(wantedPeopleData);
+        //    db.AddRange(wantedPeopleData);
 
-            db.SaveChanges();
+        //    db.SaveChanges();
 
-            var wantedPeopleService = new WantedPeopleService(db);
+        //    var wantedPeopleService = new WantedPeopleService(db);
 
-            // Act
-            var result = wantedPeopleService.IsPersonExisting(1);
+        //    // Act
+        //    var result = wantedPeopleService.IsPersonExisting(1);
 
-            // Assert
-            result
-                .Should().BeTrue();
-        }
+        //    // Assert
+        //    result
+        //        .Should().BeTrue();
+        //}
 
-        [Fact]
-        public void ShouldGetTheCorrectResultForSearchingCriteria()
-        {
-            // Arrange
-            var db = Tests.GetDatabase();
+        //[Fact]
+        //public void ShouldGetTheCorrectResultForSearchingCriteria()
+        //{
+        //    // Arrange
+        //    var db = Tests.GetDatabase();
 
-            var wantedPeopleData = this.GetWantedPeopleData();
+        //    var wantedPeopleData = this.GetWantedPeopleData();
 
-            db.AddRange(wantedPeopleData);
+        //    db.AddRange(wantedPeopleData);
 
-            db.SaveChanges();
+        //    db.SaveChanges();
 
-            var wantedPeopleService = new WantedPeopleService(db);
+        //    var wantedPeopleService = new WantedPeopleService(db);
 
-            // Act
-            var searchName = "Pesho";
-            var result = wantedPeopleService.SearchByComponents(false, 0, false, Gender.Male, searchName, null, null, 0);
+        //    // Act
+        //    var searchName = "Pesho";
+        //    var result = wantedPeopleService.SearchByComponents(false, 0, false, Gender.Male, searchName, null, null, 0);
 
-            // Assert
-            result
-                .Should().HaveCount(1)
-                .And.Match(r => r.ElementAt(0).FirstName == searchName);
-        }
+        //    // Assert
+        //    result
+        //        .Should().HaveCount(1)
+        //        .And.Match(r => r.ElementAt(0).FirstName == searchName);
+        //}
 
-        [Fact]
-        public void ShouldReturnTwoAsMethodCountIsInvoked()
-        {
-            // Arrange
-            var db = Tests.GetDatabase();
+        //[Fact]
+        //public void ShouldReturnTwoAsMethodCountIsInvoked()
+        //{
+        //    // Arrange
+        //    var db = Tests.GetDatabase();
 
-            var wantedPeopleData = this.GetWantedPeopleData();
+        //    var wantedPeopleData = this.GetWantedPeopleData();
 
-            db.AddRange(wantedPeopleData);
+        //    db.AddRange(wantedPeopleData);
 
-            db.SaveChanges();
+        //    db.SaveChanges();
 
-            var wantedPeopleService = new WantedPeopleService(db);
+        //    var wantedPeopleService = new WantedPeopleService(db);
 
-            // Act
-            var result = wantedPeopleService.Total();
+        //    // Act
+        //    var result = wantedPeopleService.Total();
 
-            // Assert
-            result
-                .Should().Be(2);
-        }
+        //    // Assert
+        //    result
+        //        .Should().Be(2);
+        //}
 
 
-        private IEnumerable<IdentityParticularsWanted> GetWantedPeopleData()
-        {
-            var firstWantedPerson = new IdentityParticularsWanted
-            {
-                Id = 1,
-                FirstName = "Pesho",
-                LastName = "Peshev",
-                DateOfBirth = DateTime.UtcNow,
-                Reward = 10000
-            };
+        //private IEnumerable<IdentityParticularsWanted> GetWantedPeopleData()
+        //{
+        //    var firstWantedPerson = new IdentityParticularsWanted
+        //    {
+        //        Id = 1,
+        //        FirstName = "Pesho",
+        //        LastName = "Peshev",
+        //        DateOfBirth = DateTime.UtcNow,
+        //        Reward = 10000
+        //    };
 
-            var secondWantedPerson = new IdentityParticularsWanted
-            {
-                Id = 2,
-                FirstName = "Ivan",
-                LastName = "Ivanov",
-                DateOfBirth = DateTime.UtcNow,
-                Reward = 50000
-            };
+        //    var secondWantedPerson = new IdentityParticularsWanted
+        //    {
+        //        Id = 2,
+        //        FirstName = "Ivan",
+        //        LastName = "Ivanov",
+        //        DateOfBirth = DateTime.UtcNow,
+        //        Reward = 50000
+        //    };
 
-            return new List<IdentityParticularsWanted> { firstWantedPerson, secondWantedPerson };
-        }
+        //    return new List<IdentityParticularsWanted> { firstWantedPerson, secondWantedPerson };
+        //}
     }
 }
