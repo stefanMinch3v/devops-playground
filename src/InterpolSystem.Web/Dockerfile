@@ -9,7 +9,7 @@ WORKDIR /src
 COPY ["InterpolSystem.Web/InterpolSystem.Web.csproj", "InterpolSystem.Web/"]
 COPY ["InterpolSystem.Common/InterpolSystem.Common.csproj", "InterpolSystem.Common/"]
 COPY ["InterpolSystem.Data/InterpolSystem.Data.csproj", "InterpolSystem.Data/"]
-COPY ["InterpolSystem.Services/InterpolSystem.Services.csproj", "InterpolSystem.Services/"]
+#COPY ["InterpolSystem.Services/InterpolSystem.Services.csproj", "InterpolSystem.Services/"]
 RUN dotnet restore "InterpolSystem.Web/InterpolSystem.Web.csproj"
 COPY . .
 WORKDIR "/src/InterpolSystem.Web"
