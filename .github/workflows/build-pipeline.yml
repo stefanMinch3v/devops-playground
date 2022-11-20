@@ -39,13 +39,13 @@ jobs:
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
       - name: Install dependencies
-        working-directory: src/TaskTronicApp/TaskTronic.Tests
+        working-directory: src/InterpolSystem.Test
         run: dotnet restore 
       - name: Build
-        working-directory: src/TaskTronicApp/TaskTronic.Tests
+        working-directory: src/InterpolSystem.Test
         run: dotnet build --configuration Release --no-restore
       - name: Test
-        working-directory: src/TaskTronicApp/TaskTronic.Tests
+        working-directory: src/InterpolSystem.Test
         run: dotnet test --no-restore --verbosity normal
 
   git-leaks:
@@ -86,7 +86,7 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          file: src/docker-compose
+          file: src/InterpolSystem.Web/Dockerfile
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
