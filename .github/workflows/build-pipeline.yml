@@ -80,6 +80,8 @@ jobs:
           tags: |
             type=sha,format=long
       - name: Build and push Docker image
+        run: dotnet restore src/TaskTronicApp/TaskTronic.sln dotnet build src/TaskTronicApp/TaskTronic.sln --configuration Release --no-restore
+        working-directory: src/TaskTronicApp/TaskTronic.sln
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
           context: .
