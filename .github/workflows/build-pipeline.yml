@@ -82,8 +82,8 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
         with:
-          context: ./build/front
-          file: ./build/front/Dockerfile
+          context: ./src/InterpolSystem.Web
+          file: ./src/InterpolSystem.Web/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
