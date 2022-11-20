@@ -26,7 +26,7 @@ jobs:
           VALIDATE_ALL_CODEBASE: false # only new or edited files will be parsed for validation 
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  build-tests:
+  run-tests:
     runs-on: ubuntu-latest
     strategy:
       matrix:
