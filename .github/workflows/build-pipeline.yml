@@ -86,7 +86,7 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          file: src/TaskTronicApp/TaskTronic.Drive/Dockerfile
+          file: src/docker-compose
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
