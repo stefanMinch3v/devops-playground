@@ -47,6 +47,7 @@ jobs:
         working-directory: src/TaskTronicApp/TaskTronic.Tests
         run: dotnet test --no-restore --verbosity normal
   git-leaks:
+    needs: [run-tests]
     name: secrets detection
     runs-on: ubuntu-latest
     steps:
