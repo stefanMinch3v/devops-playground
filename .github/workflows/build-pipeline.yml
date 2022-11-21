@@ -81,6 +81,7 @@ jobs:
             type=sha,format=long
       - name: Build and push Docker image
         uses: docker/build-push-action@v3
+        run: bash cd ./src ls
         with:
           context: ./src/InterpolSystem.Web
           file: ./src/InterpolSystem.Web/Dockerfile
