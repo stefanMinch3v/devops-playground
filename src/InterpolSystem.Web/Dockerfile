@@ -6,11 +6,11 @@ EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["InterpolSystem.Web/InterpolSystem.Web.csproj", "InterpolSystem.Web/"]
-COPY ["InterpolSystem.Common/InterpolSystem.Common.csproj", "InterpolSystem.Common/"]
-COPY ["InterpolSystem.Data/InterpolSystem.Data.csproj", "InterpolSystem.Data/"]
-COPY ["InterpolSystem.Services/InterpolSystem.Services.csproj", "InterpolSystem.Services/"]
-RUN dotnet restore "InterpolSystem.Web/InterpolSystem.Web.csproj"
+COPY ["/src/InterpolSystem.Web/InterpolSystem.Web.csproj", "InterpolSystem.Web/"]
+COPY ["/src/InterpolSystem.Common/InterpolSystem.Common.csproj", "InterpolSystem.Common/"]
+COPY ["/src/InterpolSystem.Data/InterpolSystem.Data.csproj", "InterpolSystem.Data/"]
+COPY ["/src/InterpolSystem.Services/InterpolSystem.Services.csproj", "InterpolSystem.Services/"]
+RUN dotnet restore "/src/InterpolSystem.Web/InterpolSystem.Web.csproj"
 COPY . .
 WORKDIR "/src/InterpolSystem.Web"
 RUN dotnet build "InterpolSystem.Web.csproj" -c Release -o /app/build
