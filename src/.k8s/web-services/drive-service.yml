@@ -1,0 +1,77 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: drive-service-data
+spec:
+  accessModes:
+  - ReadWriteOnce
+  - ReadOnlyMany 
+  resources:
+    requests:
+      storage: 10Mi
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: drive-service
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 5002
+    targetPort: 80
+  selector:
+    web-service: drive
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: drive-service
+spec:
+  selector:
+    matchLabels:
+      web-service: drive
+  template:
+    metadata:
+      labels:
+        web-service: drive
+        system: server
+    spec:
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                web-service: drive
+            topologyKey: "kubernetes.io/hostname"
+      containers:
+      - name: drive-service
+        image: stefantestdocker/tasktronic-drive-service:1.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "250m"
+        env:
+        - name: ApplicationSettings__Secret
+          valueFrom:
+            secretKeyRef:
+              name: environment-secrets
+              key: security-token-secret
+        - name: ConnectionStrings__DefaultConnection
+          valueFrom:
+            secretKeyRef:
+              name: environment-secrets
+              key: drive-service-connection-string
+        volumeMounts:
+        - name: drive-service-data
+          mountPath: /root/.aspnet/DataProtection-Keys
+      volumes:
+      - name: drive-service-data
+        persistentVolumeClaim:
+          claimName: drive-service-data
