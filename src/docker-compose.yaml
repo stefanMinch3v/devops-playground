@@ -37,7 +37,7 @@ services:
             - "5000:80"
         env_file: TaskTronicApp/TaskTronic/Common.env
         environment:
-            - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=TaskTronicIdentity;User Id=sa; Password=myDbConn3ct10nPassw0rD!@;MultipleActiveResultSets=true
+            - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=TaskTronicIdentity;User Id=sa; Password=identityDatabasePassword12!@;MultipleActiveResultSets=true
         restart: on-failure
         volumes:
             - ./.aspnet/identity/DataProtection-Keys:/root/.aspnet/DataProtection-Keys
@@ -55,7 +55,7 @@ services:
             - "5002:80"
         env_file: TaskTronicApp/TaskTronic/Common.env
         environment:
-            - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=TaskTronicDrive;User Id=sa; Password=myDbConn3ct10nPassw0rD!@;MultipleActiveResultSets=true
+            - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=TaskTronicDrive;User Id=sa; Password=driveDatabasePassword12!@;MultipleActiveResultSets=true
         restart: on-failure
         volumes:
             - ./.aspnet/drive/DataProtection-Keys:/root/.aspnet/DataProtection-Keys
@@ -89,7 +89,7 @@ services:
             - "5004:80"
         env_file: TaskTronicApp/TaskTronic/Common.env
         environment:
-            - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=TaskTronicStatistics;User Id=sa; Password=myDbConn3ct10nPassw0rD!@;MultipleActiveResultSets=true
+            - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=TaskTronicStatistics;User Id=sa; Password=statisticsDatabasePassword12!@;MultipleActiveResultSets=true
         restart: on-failure
         volumes:
             - ./.aspnet/statistics/DataProtection-Keys:/root/.aspnet/DataProtection-Keys
