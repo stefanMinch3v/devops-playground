@@ -1,16 +1,16 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:3.1 AS base
 WORKDIR /app
 EXPOSE 80
 
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:3.1 AS build
 WORKDIR /src
-COPY ["/src/InterpolSystem.Web/InterpolSystem.Web.csproj", "InterpolSystem.Web/"]
-COPY ["/src/InterpolSystem.Common/InterpolSystem.Common.csproj", "InterpolSystem.Common/"]
-COPY ["/src/InterpolSystem.Data/InterpolSystem.Data.csproj", "InterpolSystem.Data/"]
-COPY ["/src/InterpolSystem.Services/InterpolSystem.Services.csproj", "InterpolSystem.Services/"]
-RUN dotnet restore "/src/InterpolSystem.Web/InterpolSystem.Web.csproj"
+COPY ["InterpolSystem.Web/InterpolSystem.Web.csproj", "InterpolSystem.Web/"]
+COPY ["InterpolSystem.Common/InterpolSystem.Common.csproj", "InterpolSystem.Common/"]
+COPY ["InterpolSystem.Data/InterpolSystem.Data.csproj", "InterpolSystem.Data/"]
+COPY ["InterpolSystem.Services/InterpolSystem.Services.csproj", "InterpolSystem.Services/"]
+RUN dotnet restore "InterpolSystem.Web/InterpolSystem.Web.csproj"
 COPY . .
 WORKDIR "/src/InterpolSystem.Web"
 RUN dotnet build "InterpolSystem.Web.csproj" -c Release -o /app/build

@@ -21,29 +21,7 @@ namespace InterpolSystem.Web
         // user secrets
         public Startup(IConfiguration configuration)
         {
-            var builder = new ConfigurationBuilder();
-
-            builder.AddUserSecrets<Startup>();
-
-            Configuration = builder.Build();
-
-            foreach (var item in configuration.AsEnumerable())
-            {
-                Configuration[item.Key] = item.Value;
-            }
-        }
-
-        // user secrets
-        public Startup(IHostingEnvironment env)
-        {
-            var builder = new ConfigurationBuilder();
-
-            if (env.IsDevelopment())
-            {
-                builder.AddUserSecrets<Startup>();
-            }
-
-            Configuration = builder.Build();
+            Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }

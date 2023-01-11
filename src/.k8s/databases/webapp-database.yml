@@ -1,0 +1,70 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+ name: webapp-database-data
+spec:
+ accessModes:
+ - ReadWriteOnce
+ resources:
+  requests:
+    storage: 10Gi
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+ name: webapp-database
+spec:
+  clusterIP: None # headless - perfect for 1 replica scenarios, internal expose via the service name
+  ports:
+  - port: 1433
+    targetPort: 1433
+  selector:
+    database: webapp
+
+---
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+ name: webapp-database
+spec:
+ serviceName: webapp-database
+ selector:
+  matchLabels: 
+    database: webapp
+ template:
+  metadata:
+    labels:
+      database: webapp
+      system: database # to filter out by kubectl get pods -l system=database
+  spec:
+    terminationGracePeriodSeconds: 60
+    securityContext:
+        fsGroup: 10001
+    containers:
+    - name: webapp-database
+      image: mcr.microsoft.com/mssql/server:2019-latest
+      imagePullPolicy: IfNotPresent
+      ports:
+      - containerPort: 1433
+      resources:
+        limits:
+          memory: "2Gi"
+          cpu: "1000m"
+      env:
+      - name: ACCEPT_EULA
+        value: "Y"
+      - name: SA_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: environment-secrets
+            key: webapp-database-sa-password
+      volumeMounts:
+      - name: webapp-database-data
+        mountPath: /var/opt/mssql
+    volumes:
+    - name: webapp-database-data
+      persistentVolumeClaim:
+        claimName: webapp-database-data
