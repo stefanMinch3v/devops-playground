@@ -1,0 +1,68 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+ name: drive-database-data
+spec:
+ accessModes:
+ - ReadWriteOnce
+ resources:
+  requests:
+    storage: 10Gi
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+ name: drive-database
+spec:
+  clusterIP: None # headless - perfect for 1 replica scenarios, internal expose via the service name
+  ports:
+  - port: 1433
+    targetPort: 1433
+  selector:
+    database: drive
+
+---
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+ name: drive-database
+spec:
+ serviceName: drive-database
+ selector:
+  matchLabels: 
+    database: drive
+ template:
+  metadata:
+    labels:
+      database: drive
+      system: database # to filter out by kubectl get pods -l system=database
+  spec:
+    terminationGracePeriodSeconds: 60
+    containers:
+    - name: drive-database
+      image: mcr.microsoft.com/mssql/server:2019-latest
+      imagePullPolicy: IfNotPresent
+      ports:
+      - containerPort: 1433
+      resources:
+        limits:
+          memory: "2Gi"
+          cpu: "1000m"
+      env:
+      - name: ACCEPT_EULA
+        value: "Y"
+      - name: SA_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: environment-secrets
+            key: drive-database-sa-password
+      volumeMounts:
+      - name: drive-database-data
+        mountPath: /var/opt/mssql
+    volumes:
+    - name: drive-database-data
+      persistentVolumeClaim:
+        claimName: drive-database-data
