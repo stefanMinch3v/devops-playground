@@ -41,6 +41,8 @@ spec:
       system: database # to filter out by kubectl get pods -l system=database
   spec:
     terminationGracePeriodSeconds: 60
+    securityContext:
+      fsGroup: 10001
     containers:
     - name: statistics-database
       image: mcr.microsoft.com/mssql/server:2019-latest
@@ -49,8 +51,8 @@ spec:
       - containerPort: 1433
       resources:
         limits:
-          memory: "2Gi"
-          cpu: "1000m"
+          memory: "1Gi"
+          cpu: "512m"
       env:
       - name: ACCEPT_EULA
         value: "Y"

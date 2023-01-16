@@ -6,7 +6,7 @@ data:
   seed-initial-data: "True"
   event-bus-host: event-bus
   event-bus-user: rabbitmq
-  notifications-allowed-origins: http://localhost
+  notifications-allowed-origins: http://34.29.66.72
   admin-identity-endpoint: http://identity-service:5000
   admin-drive-endpoint: http://drive-service:5002
   admin-statistics-endpoint: http://statistics-service:5004

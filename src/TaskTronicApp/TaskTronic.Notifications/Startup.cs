@@ -23,7 +23,7 @@ namespace TaskTronic.Notifications
                 .AddTokenAuthentication(this.Configuration, JwtConfiguration.BearerEvents("/notifications"))
                 .AddMessaging(
                     useHangfireForPublishers: false,
-                    configuration: null,
+                    configuration: this.Configuration,
                     typeof(FileUploadedConsumer), 
                     typeof(FolderCreatedConsumer))
                 .AddSignalR();
@@ -35,10 +35,14 @@ namespace TaskTronic.Notifications
                 app.UseDeveloperExceptionPage();
             }
 
+            var allowedOrigins = this.Configuration
+                .GetSection(nameof(NotificationSettings))
+                .GetValue<string>(nameof(NotificationSettings.AllowedOrigins));
+
             app
                 .UseRouting()
                 .UseCors(options => options
-                    .WithOrigins("http://localhost:4200")
+                    .WithOrigins(allowedOrigins)
                     .AllowAnyHeader()
                     .AllowAnyMethod()
                     .AllowCredentials())
