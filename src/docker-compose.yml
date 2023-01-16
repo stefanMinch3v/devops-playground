@@ -20,13 +20,12 @@ services:
             context: .
             dockerfile: ./InterpolSystem.Web/Dockerfile
         ports:
-            - "5010:80"
-        env_file: InterpolSystem.Web/Common.env
+            - "5015:80"
         environment:
             - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=InterpolSystem;User Id=sa; Password=myDbConn3ct10nPassw0rD!@;MultipleActiveResultSets=true
         restart: on-failure
         volumes:
-            - ./.aspnet/drive/DataProtection-Keys:/root/.aspnet/DataProtection-Keys
+            - ./.aspnet/web-app/DataProtection-Keys:/root/.aspnet/DataProtection-Keys
         networks:
             - interpol-network
         depends_on:
