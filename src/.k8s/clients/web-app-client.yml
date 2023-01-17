@@ -1,0 +1,69 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: webapp-client-data
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Mi
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapp-client
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 5010
+    targetPort: 80
+  selector:
+    web-client: webapp-client
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapp-client
+spec:
+  selector:
+    matchLabels:
+      web-client: webapp-client
+  template:
+    metadata:
+      labels:
+        web-client: webapp-client
+        system: client
+    spec:
+      containers:
+      - name: webapp-client
+        image: stefantestdocker/interpol-webapp-client:sha-59997e49efb6dcf3ef6413a614a60d575c3400ad
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "250m"
+        env:
+        - name: ConnectionStrings__DefaultConnection
+          valueFrom:
+            secretKeyRef:
+              name: environment-secrets
+              key: webapp-service-connection-string
+        - name: ApplicationSettings__Secret
+          valueFrom:
+            secretKeyRef:
+              name: environment-secrets
+              key: security-token-secret
+        volumeMounts:
+        - name: webapp-client-data
+          mountPath: /root/.aspnet/DataProtection-Keys
+      volumes:
+      - name: webapp-client-data
+        persistentVolumeClaim:
+          claimName: webapp-client-data

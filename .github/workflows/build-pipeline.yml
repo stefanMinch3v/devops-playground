@@ -26,11 +26,13 @@ jobs:
           VALIDATE_ALL_CODEBASE: false # only new or edited files will be parsed for validation 
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   run-tests:
+    needs: [build-linting]
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        dotnet-version: ['6.0']
+        dotnet-version: ['3.1']
     steps:
       - uses: actions/checkout@v3
       - name: Setup .NET SDK ${{ matrix.dotnet-version }}
@@ -38,15 +40,17 @@ jobs:
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
       - name: Install dependencies
-        working-directory: src/TaskTronicApp/TaskTronic.Tests
+        working-directory: src/InterpolSystem.Test
         run: dotnet restore 
       - name: Build
-        working-directory: src/TaskTronicApp/TaskTronic.Tests
+        working-directory: src/InterpolSystem.Test
         run: dotnet build --configuration Release --no-restore
       - name: Test
-        working-directory: src/TaskTronicApp/TaskTronic.Tests
+        working-directory: src/InterpolSystem.Test
         run: dotnet test --no-restore --verbosity normal
+
   git-leaks:
+    needs: [run-tests]
     name: secrets detection
     runs-on: ubuntu-latest
     steps:
@@ -56,3 +60,45 @@ jobs:
       - uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  trivy-vulnerability-scanner:
+    needs: [git-leaks]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: "${{ secrets.DOCKER_NAMESPACE }}/${{ secrets.DOCKER_REPOSITORY }}:sha-${{ github.sha }}"
+          format: "table"
+          exit-code: "1"
+          ignore-unfixed: true
+          vuln-type: "os,library"
+          severity: "CRITICAL,HIGH"
+
+  push-to-docker-hub:
+    needs: [git-leaks]
+    name: Push image to Docker Hub
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v3
+      - name: Log in to Docker Hub
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+        with:
+          images: ${{ secrets.DOCKER_NAMESPACE }}/${{ secrets.DOCKER_REPOSITORY }}
+          tags: |
+            type=sha,format=long
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v3
+        with:
+          context: ./src
+          file: ./src/InterpolSystem.Web/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}

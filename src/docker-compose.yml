@@ -1,0 +1,38 @@
+version: "3.8"
+
+services:
+    data:
+        container_name: sqlserver
+        image: mcr.microsoft.com/mssql/server:2019-latest
+        ports:
+            - "1433:1433"
+        environment:
+            - ACCEPT_EULA=Y
+            - SA_PASSWORD=myDbConn3ct10nPassw0rD!@
+        volumes:
+            - sqldata:/var/opt/mssql
+        networks:
+            - interpol-network
+
+    webapp:
+        container_name: webapp
+        build:
+            context: .
+            dockerfile: ./InterpolSystem.Web/Dockerfile
+        ports:
+            - "5015:80"
+        environment:
+            - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=InterpolSystem;User Id=sa; Password=myDbConn3ct10nPassw0rD!@;MultipleActiveResultSets=true
+        restart: on-failure
+        volumes:
+            - ./.aspnet/web-app/DataProtection-Keys:/root/.aspnet/DataProtection-Keys
+        networks:
+            - interpol-network
+        depends_on:
+            - data
+
+networks:
+    interpol-network:
+
+volumes:
+    sqldata:
