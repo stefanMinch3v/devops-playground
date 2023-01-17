@@ -43,6 +43,6 @@ jobs:
         shell: powershell
         run: |
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"stefanMinch3v_devops-playground" /o:"stefanminch3v" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
-          dotnet restore src/TaskTronicApp/TaskTronic.sln 
-          dotnet build src/TaskTronicApp/TaskTronic.sln --configuration Release --no-restore
+          dotnet restore src/InterpolSystem.sln
+          dotnet build src/InterpolSystem.sln --configuration Release --no-restore
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
