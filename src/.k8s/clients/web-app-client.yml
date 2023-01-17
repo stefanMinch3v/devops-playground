@@ -18,7 +18,7 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-  - port: 5015
+  - port: 5010
     targetPort: 80
   selector:
     web-client: webapp-client
@@ -41,7 +41,7 @@ spec:
     spec:
       containers:
       - name: webapp-client
-        image: stefantestdocker/interpol-webapp-client:1.0
+        image: stefantestdocker/interpol-webapp-client:sha-59997e49efb6dcf3ef6413a614a60d575c3400ad
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80
