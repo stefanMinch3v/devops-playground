@@ -28,6 +28,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   run-tests:
+    needs: [build-linting]
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -75,6 +76,7 @@ jobs:
           severity: "CRITICAL,HIGH"
 
   push-to-docker-hub:
+    needs: [git-leaks]
     name: Push image to Docker Hub
     runs-on: ubuntu-latest
     steps:
