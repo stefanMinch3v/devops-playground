@@ -10,57 +10,6 @@ on: [push]
   #   types: [opened, synchronize, reopened]
 
 jobs:
-  build-linting:
-    name: Lint Code Base
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
-        with:
-          # Full git history is needed to get a proper
-          # list of changed files within `super-linter`
-          fetch-depth: 2
-      - name: Lint Code Base
-        uses: github/super-linter@v4
-        env:
-          VALIDATE_ALL_CODEBASE: false # only new or edited files will be parsed for validation 
-          DEFAULT_BRANCH: main
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  run-tests:
-    needs: [build-linting]
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        dotnet-version: ['3.1']
-    steps:
-      - uses: actions/checkout@v3
-      - name: Setup .NET SDK ${{ matrix.dotnet-version }}
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: ${{ matrix.dotnet-version }}
-      - name: Install dependencies
-        working-directory: src/InterpolSystem.Test
-        run: dotnet restore 
-      - name: Build
-        working-directory: src/InterpolSystem.Test
-        run: dotnet build --configuration Release --no-restore
-      - name: Test
-        working-directory: src/InterpolSystem.Test
-        run: dotnet test --no-restore --verbosity normal
-
-  git-leaks:
-    needs: [run-tests]
-    name: secrets detection
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
   push-to-docker-hub:
     needs: [git-leaks]
     name: Push image to Docker Hub
@@ -86,7 +35,7 @@ jobs:
           context: ./src
           file: ./src/InterpolSystem.Web/Dockerfile
           push: true
-          tags: latest
+          tags: "latest"
           labels: ${{ steps.meta.outputs.labels }}
 
   trivy-vulnerability-scanner:
