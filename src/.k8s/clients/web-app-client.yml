@@ -1,17 +1,4 @@
 apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: webapp-client-data
-spec:
-  accessModes:
-  - ReadWriteMany
-  resources:
-    requests:
-      storage: 10Mi
-
----
-
-apiVersion: v1
 kind: Service
 metadata:
   name: webapp-client
@@ -60,10 +47,3 @@ spec:
             secretKeyRef:
               name: environment-secrets
               key: security-token-secret
-        volumeMounts:
-        - name: webapp-client-data
-          mountPath: /root/.aspnet/DataProtection-Keys
-      volumes:
-      - name: webapp-client-data
-        persistentVolumeClaim:
-          claimName: webapp-client-data
