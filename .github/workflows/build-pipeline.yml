@@ -86,7 +86,7 @@ jobs:
           context: ./src
           file: ./src/InterpolSystem.Web/Dockerfile
           push: true
-          tags: "latest"
+          tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
   trivy-vulnerability-scanner:
@@ -96,7 +96,7 @@ jobs:
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: "${{ secrets.DOCKER_NAMESPACE }}/${{ secrets.DOCKER_REPOSITORY }}:latest"
+          image-ref: "${{ secrets.DOCKER_NAMESPACE }}/${{ secrets.DOCKER_REPOSITORY }}:sha-${{ steps.meta.outputs.tags }}"
           format: "table"
           exit-code: "1"
           ignore-unfixed: true
