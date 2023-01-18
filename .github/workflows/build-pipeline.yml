@@ -86,7 +86,7 @@ jobs:
           context: ./src
           file: ./src/InterpolSystem.Web/Dockerfile
           push: true
-          tags: latest
+          tags: "latest"
           labels: ${{ steps.meta.outputs.labels }}
 
   trivy-vulnerability-scanner:
