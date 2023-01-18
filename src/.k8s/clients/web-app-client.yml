@@ -5,8 +5,8 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-  - port: 5010
-    targetPort: 80
+    - port: 5010
+      targetPort: 80
   selector:
     web-client: webapp-client
 
@@ -27,23 +27,18 @@ spec:
         system: client
     spec:
       containers:
-      - name: webapp-client
-        image: stefantestdocker/interpol-webapp-client:sha-59997e49efb6dcf3ef6413a614a60d575c3400ad
-        imagePullPolicy: Always
-        ports:
-        - containerPort: 80
-        resources:
-          limits:
-            memory: "512Mi"
-            cpu: "250m"
-        env:
-        - name: ConnectionStrings__DefaultConnection
-          valueFrom:
-            secretKeyRef:
-              name: environment-secrets
-              key: webapp-service-connection-string
-        - name: ApplicationSettings__Secret
-          valueFrom:
-            secretKeyRef:
-              name: environment-secrets
-              key: security-token-secret
+        - name: webapp-client
+          image: stefantestdocker/interpol-webapp-client:sha-59997e49efb6dcf3ef6413a614a60d575c3400ad
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "250m"
+          env:
+            - name: ConnectionStrings__DefaultConnection
+              valueFrom:
+                secretKeyRef:
+                  name: environment-secrets
+                  key: webapp-service-connection-string
