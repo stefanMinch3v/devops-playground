@@ -26,7 +26,7 @@ jobs:
           VALIDATE_ALL_CODEBASE: false # only new or edited files will be parsed for validation 
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          FILTER_REGEX_EXCLUDE: .*github/workflows/build-pipeline.* .*src/.k8s.*
+          FILTER_REGEX_EXCLUDE: .*src/.k8s.*
 
   run-tests:
     needs: [build-linting]
