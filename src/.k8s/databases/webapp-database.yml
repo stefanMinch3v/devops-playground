@@ -4,7 +4,7 @@ metadata:
  name: webapp-database-data
 spec:
  accessModes:
- - ReadWriteMany
+ - ReadWriteOne
  resources:
   requests:
     storage: 10Gi
