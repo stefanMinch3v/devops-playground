@@ -28,8 +28,20 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           FILTER_REGEX_EXCLUDE: .*github/workflows/build-pipeline.*
 
-  run-tests:
+  git-leaks:
     needs: [build-linting]
+    name: secrets detection
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  run-tests:
+    needs: [git-leaks]
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -50,20 +62,8 @@ jobs:
         working-directory: src/InterpolSystem.Test
         run: dotnet test --no-restore --verbosity normal
 
-  git-leaks:
-    needs: [run-tests]
-    name: secrets detection
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
   push-to-docker-hub:
-    needs: [git-leaks]
+    needs: [run-tests]
     name: Push image to Docker Hub
     runs-on: ubuntu-latest
     steps:
