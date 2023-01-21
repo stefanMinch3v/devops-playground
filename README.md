@@ -4,7 +4,7 @@
 ![GitHub Workflow Status (with branch)](https://img.shields.io/github/actions/workflow/status/stefanMinch3v/devops-playground/sonar-cloud.yml?branch=main&label=SAST)
 ![GitHub Workflow Status (with branch)](https://img.shields.io/github/actions/workflow/status/stefanMinch3v/devops-playground/build-pipeline.yml?branch=main)
 
-Topics covered:
+The project covers the following topics:
 - Source control
 - Branching strategies
 - Building pipelines
