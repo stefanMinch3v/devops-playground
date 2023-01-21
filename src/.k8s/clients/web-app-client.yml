@@ -30,7 +30,7 @@ spec:
     spec:
       containers:
         - name: webapp-client
-          image: stefantestdocker/interpol-webapp-client:sha-59997e49efb6dcf3ef6413a614a60d575c3400ad
+          image: stefantestdocker/interpol-webapp-client:sha-1febfd1fcba1cf8ad48bbee6ea7bc00a9b559a24
           imagePullPolicy: Always
           ports:
             - containerPort: 80
