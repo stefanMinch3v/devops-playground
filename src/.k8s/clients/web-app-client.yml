@@ -23,12 +23,18 @@ spec:
   selector:
     matchLabels:
       web-client: webapp-client
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0 # all pods should be available while updating
+      maxSurge: 1 # updates 1 by 1
   template:
     metadata:
       labels:
         web-client: webapp-client
         system: client
     spec:
+      terminationGracePeriodSeconds: 2
       containers:
         - name: webapp-client
           image: stefantestdocker/interpol-webapp-client:sha-65f00f33c3f1f902ee7a52d887779490da2dce3a
