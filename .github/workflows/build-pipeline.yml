@@ -6,8 +6,8 @@ on:
       - 'src/InterpolSystem**'
   #   branches:
   #     - 'feature/pipelines'
-  pull_request:
-    types: [opened, synchronize, reopened]
+  # pull_request:
+  #   types: [opened, synchronize, reopened]
 
 jobs:
   build-linting:
