@@ -37,7 +37,7 @@ spec:
       terminationGracePeriodSeconds: 2
       containers:
         - name: webapp-client
-          image: stefantestdocker/interpol-webapp-client:sha-65f00f33c3f1f902ee7a52d887779490da2dce3a
+          image: stefantestdocker/interpol-webapp-client:sha-223a8f9711408743fb2e657a14846389fea9db19
           imagePullPolicy: Always
           ports:
             - containerPort: 80
